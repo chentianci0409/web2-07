@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>雪梨教育8</title>
+	<style type="text/css">
+	*{
+		padding: 0px;
+		margin: 0px;
+	}
+	ul,li{
+		list-style: none;
+		text-align: center;
+		margin: 10px;
+	}
+	.line{
+		position: absolute;
+		top: 0px;
+		width: 1920px;
+		height: 700px;
+		border-left: 3px solid black;
+		border-right: 3px solid black;
+
+	}
+	.textbox{
+		position: absolute;
+		top: 0px;
+		left: 520px;
+		width: 900px;
+		height: 16px;
+		overflow: hidden;
+	}
+	.textslider{
+		position: absolute;
+		width: 315px;
+		font-size: 12px;
+		color: red;
+		
+	}
+	.head{
+		position: absolute;
+		top: 0px;
+		width: 1920px;
+		height: 16px;
+		background:url("images/a15.png") no-repeat 500px center #ccc;
+		overflow: hidden;
+	}
+	.box{
+		width: 1200px;
+		height:382px;
+		border:1px solid red;
+		margin: 100px auto;
+		position: relative;
+		overflow: hidden;
+	}
+	.slider{
+		width: 8400px;
+		position: absolute;
+		left: -1200px;
+	}
+	.slide{
+		width: 1200px;
+		overflow: hidden;
+		float: left;
+	}
+	.box>span{
+		display: block;
+		width: 30px;
+		height: 50px;
+		text-align: center;
+		cursor: pointer;
+		color:     ;
+		top: 175px;
+		line-height: 50px;
+		background:rgb(255,0,0);
+		font-size: 30px;
+		position: absolute;
+		opacity: 0;
+	}
+
+	#left{
+		left: 30px;
+	}
+	#right{
+		right: 30px;
+	}
+	.nav{
+		position: absolute;
+		left: 500px;
+		bottom: 20px;
+	}
+	.nav>li{
+		float: left;
+		width: 20px;
+		height: 20px;
+		background:#ccc;
+		cursor: pointer;
+		margin-right: 0 10px;
+		border-radius: 50%;
+	}
+	.nav .active{
+		color: white;
+		background:red;
+	}
+		</style>
+	</head>
+<body>
+	<div class="line">
+		<div class="head">
+			<div class="textbox" id="textbox">
+				<div class="textslider" id="textslider">[温馨提示]最近有不少不法分子在网上骗人，请大家注意!!!!</div>
+			</div>
+		</div>
+		<div class="box" id="box">
+			<div class="slider" id ="slider">
+				<div class="slide"><img src="images/b5.png" alt="">></div>
+				<div class="slide"><img src="images/b1.png" alt="">></div>
+				<div class="slide"><img src="images/b2.png" alt="">></div>
+				<div class="slide"><img src="images/b3.png" alt="">></div>
+				<div class="slide"><img src="images/b4.png" alt="">></div>
+				<div class="slide"><img src="images/b5.png" alt="">></div>
+				<div class="slide"><img src="images/b1.png" alt="">></div>
+			</div>
+			<span id="left"><</span>
+			<span id="right">></span>
+			<ul class="nav" id="nav">
+				<li class="active">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var box = document.getElementById("box");
+		var oNavlist = document.getElementById('nav').children;
+		var slider = document.getElementById('slider');
+		var left = document.getElementById('left');
+		var right = document.getElementById('right');
+		var index = 1;
+		var speed = -2;
+		var isMoving =false;
+		var textslider = document.getElementById('textslider');
+		function textslide(){
+			var nowp =parseInt(getStyle(textslider,"left"));
+			if(nowp ==-316){
+				nowp = 900;
+			}
+			textslider.style.left = nowp + speed + 'px';
+			
+		}
+		var texttimer = setInterval(textslide,30);
+		function next(){	
+			if(!isMoving){
+				isMoving = true;
+				index++;
+				navChange();
+				animate(slider,{left:-1200*index},function(){
+					if(index === 6){
+						slider.style.left= "-1200px";
+						index = 1;
+					}
+					isMoving = false;
+			});
+		}
+		}
+		function prev(){
+		if(!isMoving){
+			isMoving = true;
+			index--;
+			navChange();
+			animate(slider,{left:-1200*index},function(){
+				if(index === 0){
+					slider.style.left= "-6000px" ;
+					index = 5;
+					}
+					isMoving = false;
+				});
+			}
+			}	
+		var timer = setInterval(next,2000); 
+		box.onmouseover = function(){
+			animate(left,{opacity:50});
+			animate(right,{opacity:50});
+			clearInterval(timer);
+		}
+		box.onmouseout = function(){
+			animate(left,{opacity:0});
+			animate(right,{opacity:0});
+			timer = setInterval(next,2000);
+		}
+		right.onclick = next;
+		left.onclick = prev;
+		for(var i =0;i<oNavlist.length;i++){
+			oNavlist[i].idx = i;
+			oNavlist[i].onclick  = function(){
+				index = this.idx + 1;
+				navChange();
+				animate(slider,{left:-1200*index});
+			}
+		}
+		function navChange(){
+			for(var i =0;i<oNavlist.length;i++){
+				oNavlist[i].className = '';
+			}
+			if(index === 6){
+				oNavlist[0].className = 'active';
+			}else if(index === 0){
+				oNavlist[4].className = 'active';
+			}else{
+				oNavlist[index - 1].className = 'active';
+			}
+		}
+		function getStyle(obj, attr){
+			if(obj.currentStyle){
+				return obj.currentStyle[attr];
+			} else {
+				return getComputedStyle(obj, null)[attr];
+			}
+		}
+		function animate(obj,json,callback){
+			clearInterval(obj.timer);
+			obj.timer = setInterval(function(){
+				var isStop = true;
+				for(var attr in json){
+					var now = 0;
+					if(attr == 'opacity'){
+						now = parseInt(getStyle(obj,attr)*100);
+					}else{
+						now = parseInt(getStyle(obj,attr));
+					}
+					var speed = (json[attr] - now) / 8;
+					speed = speed>0?Math.ceil(speed):Math.floor(speed);
+					var cur = now + speed;
+					if(attr == 'opacity'){
+						obj.style[attr] = cur / 100;
+					}else{
+						obj.style[attr] = cur + 'px';
+					}
+					if(json[attr] !== cur){
+						isStop = false;
+					}
+				}
+				if(isStop){
+					clearInterval(obj.timer);
+					callback&&callback();
+				}
+			}, 30)
+		}		
+	</script>
+</body>
+</html>
